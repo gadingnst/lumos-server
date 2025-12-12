@@ -43,11 +43,12 @@ class ServerControlService:
       ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
       
       # Connect
-      ssh.connect(ip, username=user)
+      # Use empty password as requested
+      ssh.connect(ip, username=user, password='', timeout=10, allow_agent=False, look_for_keys=False)
       
       # Execute shutdown command
       # Assuming passwordless sudo for 'shutdown' or 'poweroff'
-      stdin, stdout, stderr = ssh.exec_command('sudo shutdown -h now')
+      ssh.exec_command('shutdown /s /f /t 0')
       
       # Close connection
       ssh.close()
