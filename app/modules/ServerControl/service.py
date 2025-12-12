@@ -1,5 +1,6 @@
 import wakeonlan
 import os
+import paramiko
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,3 +24,34 @@ class ServerControlService:
       
     wakeonlan.send_magic_packet(mac_address)
     return True
+
+  def shutdown_ai_server(self):
+    """
+    Shutdown the AI server via SSH.
+    
+    Returns:
+      True if command sent, False if connection failed.
+    """
+    ip = os.getenv('AI_SERVER_IP')
+    user = os.getenv('AI_SERVER_USER')
+    
+    if not ip or not user:
+      return False
+      
+    try:
+      ssh = paramiko.SSHClient()
+      ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+      
+      # Connect
+      ssh.connect(ip, username=user)
+      
+      # Execute shutdown command
+      # Assuming passwordless sudo for 'shutdown' or 'poweroff'
+      stdin, stdout, stderr = ssh.exec_command('sudo shutdown -h now')
+      
+      # Close connection
+      ssh.close()
+      return True
+    except Exception as e:
+      print(f"SSH Error: {e}")
+      return False

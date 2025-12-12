@@ -23,3 +23,18 @@ class ServerControlHandler:
       
     except Exception as e:
       return error_response(message=str(e), status_code=500)
+
+  def shutdown_ai_server(self):
+    """
+    Handle request to shutdown the AI server.
+    """
+    try:
+      success = self.service.shutdown_ai_server()
+      
+      if not success:
+        return error_response(message='Failed to shutdown AI Server. Check logs/configuration.', status_code=500)
+        
+      return success_response(message='Shutdown command sent to AI Server')
+      
+    except Exception as e:
+      return error_response(message=str(e), status_code=500)
