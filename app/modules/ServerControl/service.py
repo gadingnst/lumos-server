@@ -48,8 +48,15 @@ class ServerControlService:
       
       # Execute shutdown command
       # Assuming passwordless sudo for 'shutdown' or 'poweroff'
-      ssh.exec_command('shutdown /s /f /t 0')
-      
+      stdin, stdout, stderr = ssh.exec_command('shutdown /s /f /t 0')
+
+      # read the output and error
+      output = stdout.read().decode().strip()
+      error  = stderr.read().decode().strip()
+
+      print(f"Output: {output}")
+      print(f"Error: {error}")
+
       # Close connection
       ssh.close()
       return True
