@@ -12,7 +12,7 @@ def create_app():
   app = Flask(__name__)
   
   # Register modules
-  app.register_blueprint(server_info_bp, url_prefix='/api')
+  app.register_blueprint(server_info_bp, url_prefix='/')
   app.register_blueprint(server_control_bp, url_prefix='/api')
   
   return app
