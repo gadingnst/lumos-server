@@ -1,6 +1,8 @@
 import wakeonlan
 import os
 import paramiko
+import subprocess
+import platform
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -38,6 +40,19 @@ class ServerControlService:
     if not ip or not user:
       return False
       
+    # Ping check
+    param = '-n' if platform.system().lower() == 'windows' else '-c'
+    # Wait time parameter (-w for Windows in ms, -W for *nix in seconds)
+    wait_param = '-w' if platform.system().lower() == 'windows' else '-W'
+    wait_value = '1000' if platform.system().lower() == 'windows' else '2'
+    
+    command = ['ping', param, '1', wait_param, wait_value, ip]
+    
+    try:
+      subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    except subprocess.CalledProcessError:
+      raise Exception("Cannot contact with the AI Server")
+
     try:
       ssh = paramiko.SSHClient()
       ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
