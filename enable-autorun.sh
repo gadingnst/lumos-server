@@ -44,7 +44,7 @@ Type=simple
 WorkingDirectory=$PROJECT_DIR
 ExecStart=$PYTHON_EXEC $PROJECT_DIR/server.py
 Restart=on-failure
-Environment=PORT=5000
+Environment=PORT=5500
 # Add environment variables from .env if needed, or load them in python
 
 [Install]
