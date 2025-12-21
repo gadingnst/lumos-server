@@ -21,6 +21,19 @@ else
     echo "Using system python: $PYTHON_EXEC"
 fi
 
+# Check for .env file and read PORT
+PORT=5000 # Default
+if [ -f "$PROJECT_DIR/.env" ]; then
+    echo "Reading configuration from .env..."
+    # Extract PORT from .env (handling potential comments or whitespace)
+    # This grep looks for PORT=... and handles optional quotes
+    ENV_PORT=$(grep "^PORT=" "$PROJECT_DIR/.env" | cut -d '=' -f2 | tr -d '[:space:]"' | tr -d "'")
+    if [ ! -z "$ENV_PORT" ]; then
+        PORT=$ENV_PORT
+        echo "Found PORT in .env: $PORT"
+    fi
+fi
+
 if [ -z "$PYTHON_EXEC" ]; then
     echo "Error: python3 not found. Please install python3 first."
     exit 1
@@ -44,7 +57,7 @@ Type=simple
 WorkingDirectory=$PROJECT_DIR
 ExecStart=$PYTHON_EXEC $PROJECT_DIR/server.py
 Restart=on-failure
-Environment=PORT=5500
+Environment=PORT=$PORT
 # Add environment variables from .env if needed, or load them in python
 
 [Install]
