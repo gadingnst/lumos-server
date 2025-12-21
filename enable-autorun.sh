@@ -22,7 +22,7 @@ else
 fi
 
 # Check for .env file and read PORT
-PORT=5000 # Default
+PORT=5500 # Default
 if [ -f "$PROJECT_DIR/.env" ]; then
     echo "Reading configuration from .env..."
     # Extract PORT from .env (handling potential comments or whitespace)
